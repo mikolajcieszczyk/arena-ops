@@ -81,7 +81,13 @@ export class ClientsService {
       client.updatedAt = new Date(updateClientDto.lastUpdate);
     }
 
-    Object.assign(client, updateClientDto);
+    // Remove id from updateClientDto to prevent overwriting
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _, lastUpdate: __, ...updateData } = updateClientDto;
+
+    // Merge update data with existing client
+    Object.assign(client, updateData);
+
     const updatedClient = await this.clientRepository.save(client);
 
     return this.mapToResponseDto(updatedClient);
