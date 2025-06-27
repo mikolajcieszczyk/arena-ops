@@ -1,0 +1,265 @@
+{
+  "info": {
+    "name": "Arena Ops API",
+    "description": "API dla systemu zarządzania klubem tenisowym",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jan\",\n  \"lastName\": \"Kowalski\",\n  \"email\": \"jan.kowalski@example.com\",\n  \"phoneNumber\": \"+48 123 456 789\",\n  \"city\": \"Warszawa\",\n  \"membershipType\": \"premium\",\n  \"skillLevel\": \"3.5\",\n  \"acceptsMarketing\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients"]
+            }
+          }
+        },
+        {
+          "name": "Get All Clients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients"]
+            }
+          }
+        },
+        {
+          "name": "Get Client by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clients/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Client",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Janusz\",\n  \"city\": \"Kraków\",\n  \"skillLevel\": \"4.0\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clients/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Client",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clients/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Courts",
+      "item": [
+        {
+          "name": "Create Court",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kort Centralny\",\n  \"description\": \"Główny kort tenisowy\",\n  \"surface\": \"clay\",\n  \"type\": \"outdoor\",\n  \"courtNumber\": 1,\n  \"hourlyRate\": 50.00,\n  \"location\": \"Główny kompleks\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/courts",
+              "host": ["{{baseUrl}}"],
+              "path": ["courts"]
+            }
+          }
+        },
+        {
+          "name": "Get All Courts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/courts",
+              "host": ["{{baseUrl}}"],
+              "path": ["courts"]
+            }
+          }
+        },
+        {
+          "name": "Get Court by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/courts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["courts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Court",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hourlyRate\": 60.00,\n  \"isAvailable\": false,\n  \"notes\": \"Kort w remoncie\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/courts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["courts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Court",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/courts/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["courts", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": 1,\n  \"courtId\": 1,\n  \"startTime\": \"2024-06-28T10:00:00Z\",\n  \"endTime\": \"2024-06-28T12:00:00Z\",\n  \"status\": \"confirmed\",\n  \"totalPrice\": 100.00,\n  \"notes\": \"Rezerwacja na trening\",\n  \"specialRequests\": \"Potrzebuję piłki\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Trening zakończony pomyślnie\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Booking",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
