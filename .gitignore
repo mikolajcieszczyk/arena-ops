@@ -115,6 +115,9 @@ public
 *.swo
 *~
 
+# Cursor rules
+.cursor/
+
 # OS generated files
 .DS_Store
 .DS_Store?
