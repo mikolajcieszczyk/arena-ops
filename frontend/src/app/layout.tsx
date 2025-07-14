@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import "../lib/api-client"; // Initialize API configuration
 
 const inter = Inter({
   subsets: ["latin"],
