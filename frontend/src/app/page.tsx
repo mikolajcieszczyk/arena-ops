@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,8 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function Home() {
+  const { t } = useI18n();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -17,8 +23,9 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <MapPin className="h-8 w-8 text-primary" />
-              <h1 className="text-2xl font-bold">Arena Ops</h1>
+              <h1 className="text-2xl font-bold">{t("app.title")}</h1>
             </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>
@@ -26,10 +33,8 @@ export default function Home() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Witaj w Arena Ops</h2>
-          <p className="text-muted-foreground">
-            System zarządzania rezerwacjami, klientami i kortami sportowymi
-          </p>
+          <h2 className="text-3xl font-bold mb-2">{t("welcome.title")}</h2>
+          <p className="text-muted-foreground">{t("welcome.description")}</p>
         </div>
 
         {/* Stats Grid */}
@@ -37,40 +42,14 @@ export default function Home() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Aktywne rezerwacje
+                {t("stats.activeBookings")}
               </CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground">+2 od wczoraj</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Zarejestrowani klienci
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">156</div>
-              <p className="text-xs text-muted-foreground">+8 w tym tygodniu</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Dostępne korty
-              </CardTitle>
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">8</div>
               <p className="text-xs text-muted-foreground">
-                3 zajęte, 5 wolnych
+                {t("stats.yesterdayChange")}
               </p>
             </CardContent>
           </Card>
@@ -78,14 +57,44 @@ export default function Home() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Dzisiejsze godziny
+                {t("stats.registeredClients")}
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">156</div>
+              <p className="text-xs text-muted-foreground">
+                {t("stats.weeklyChange")}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {t("stats.availableCourts")}
+              </CardTitle>
+              <MapPin className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">8</div>
+              <p className="text-xs text-muted-foreground">
+                {t("stats.courtsStatus")}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {t("stats.todayHours")}
               </CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">6.5h</div>
               <p className="text-xs text-muted-foreground">
-                Średni czas użytkowania
+                {t("stats.avgUsageTime")}
               </p>
             </CardContent>
           </Card>
@@ -95,45 +104,51 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Rezerwacje</CardTitle>
-              <CardDescription>Zarządzaj rezerwacjami kortów</CardDescription>
+              <CardTitle>{t("actions.bookings.title")}</CardTitle>
+              <CardDescription>
+                {t("actions.bookings.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button className="w-full" size="lg">
-                Nowa rezerwacja
+                {t("actions.bookings.new")}
               </Button>
               <Button variant="outline" className="w-full">
-                Przeglądaj rezerwacje
+                {t("actions.bookings.browse")}
               </Button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Klienci</CardTitle>
-              <CardDescription>Zarządzaj bazą klientów</CardDescription>
+              <CardTitle>{t("actions.clients.title")}</CardTitle>
+              <CardDescription>
+                {t("actions.clients.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button className="w-full" size="lg">
-                Dodaj klienta
+                {t("actions.clients.add")}
               </Button>
               <Button variant="outline" className="w-full">
-                Lista klientów
+                {t("actions.clients.list")}
               </Button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Korty</CardTitle>
-              <CardDescription>Zarządzaj obiektami sportowymi</CardDescription>
+              <CardTitle>{t("actions.courts.title")}</CardTitle>
+              <CardDescription>
+                {t("actions.courts.description")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button className="w-full" size="lg">
-                Dodaj kort
+                {t("actions.courts.add")}
               </Button>
               <Button variant="outline" className="w-full">
-                Zarządzaj kortami
+                {t("actions.courts.manage")}
               </Button>
             </CardContent>
           </Card>
