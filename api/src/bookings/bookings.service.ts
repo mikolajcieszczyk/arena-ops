@@ -133,17 +133,8 @@ export class BookingsService {
       }
     }
 
-    // Update lastUpdate timestamp
-    if (updateBookingDto.lastUpdate) {
-      booking.updatedAt = new Date(updateBookingDto.lastUpdate);
-    }
-
-    // Remove id from updateBookingDto to prevent overwriting
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id: _, lastUpdate: __, ...updateData } = updateBookingDto;
-
     // Merge update data with existing booking
-    Object.assign(booking, updateData);
+    Object.assign(booking, updateBookingDto);
 
     const updatedBooking = await this.bookingRepository.save(booking);
 
@@ -167,14 +158,14 @@ export class BookingsService {
       id: booking.id,
       clientId: booking.clientId,
       courtId: booking.courtId,
-      startTime: booking.startTime,
-      endTime: booking.endTime,
+      startTime: booking.startTime.toISOString(),
+      endTime: booking.endTime.toISOString(),
       status: booking.status,
       totalPrice: booking.totalPrice,
       notes: booking.notes,
       specialRequests: booking.specialRequests,
-      createdAt: booking.createdAt,
-      updatedAt: booking.updatedAt,
+      createdAt: booking.createdAt.toISOString(),
+      updatedAt: booking.updatedAt.toISOString(),
     };
   }
 }
