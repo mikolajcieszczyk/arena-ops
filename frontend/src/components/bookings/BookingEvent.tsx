@@ -9,7 +9,7 @@ const statusConfig = {
   pending: {
     label: "Oczekująca",
     variant: "secondary" as const,
-    color: "bg-yellow-100 border-yellow-300",
+    color: "bg-yellow-100 border-yellow-300 text-yellow-800",
   },
   confirmed: {
     label: "Potwierdzona",
@@ -35,64 +35,62 @@ const statusConfig = {
 
 export function BookingEvent({ booking }: BookingEventProps) {
   const status = statusConfig[booking.status as keyof typeof statusConfig];
-  const startTime = new Date(booking.startTime);
-  const endTime = new Date(booking.endTime);
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("pl-PL", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  // Zamiast tworzyć nowe obiekty Date, wyciągamy godziny i minuty bezpośrednio ze stringa
+  const getTimeFromISOString = (isoString: string) => {
+    const [hours, minutes] = isoString.split("T")[1].split(":").slice(0, 2);
+    return `${hours}:${minutes}`;
   };
 
-  const duration = Math.round(
-    (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60)
-  );
+  const startTime = getTimeFromISOString(booking.startTime);
+  const endTime = getTimeFromISOString(booking.endTime);
+
+  // Oblicz czas trwania w godzinach
+  const startHour = parseInt(startTime.split(":")[0]);
+  const endHour = parseInt(endTime.split(":")[0]);
+  const duration = endHour - startHour;
 
   return (
     <div
       className={`
-      h-full p-2 rounded border-2 shadow-sm hover:shadow-md transition-shadow
+      h-full w-full p-2 rounded border-2 shadow-sm hover:shadow-md transition-shadow
       ${status.color}
-      flex flex-col justify-between
+      flex flex-col justify-between min-h-[60px] overflow-y-auto
     `}
     >
-      <div className="space-y-1">
-        {/* Status */}
+      <div className="space-y-0.5">
+        {/* Status, ID i cena */}
         <div className="flex justify-between items-start">
-          <Badge variant={status.variant} className="text-xs">
-            {status.label}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant={status.variant} className="text-xs">
+              {status.label}
+            </Badge>
+            {booking.totalPrice && (
+              <span className="text-xs font-semibold">
+                {booking.totalPrice} PLN
+              </span>
+            )}
+          </div>
           <span className="text-xs font-medium text-gray-600">
             #{booking.id}
           </span>
         </div>
 
         {/* Czas */}
-        <div className="text-xs font-semibold text-gray-800">
-          {formatTime(startTime)} - {formatTime(endTime)}
+        <div className="text-xs font-semibold">
+          {startTime} - {endTime}
         </div>
 
         {/* Czas trwania */}
-        <div className="text-xs text-gray-600">{duration}h</div>
+        <div className="text-xs">{duration}h</div>
       </div>
 
       {/* Informacje o kliencie */}
-      <div className="mt-2">
-        <div className="text-xs font-medium text-gray-800">
-          Klient #{booking.clientId}
-        </div>
+      <div className="mt-1">
+        <div className="text-xs font-medium">Klient #{booking.clientId}</div>
 
         {booking.notes && (
-          <div className="text-xs text-gray-600 mt-1 truncate">
-            {booking.notes}
-          </div>
-        )}
-
-        {booking.totalPrice && (
-          <div className="text-xs font-semibold text-green-700 mt-1">
-            {booking.totalPrice} PLN
-          </div>
+          <div className="text-xs mt-1 truncate">{booking.notes}</div>
         )}
       </div>
     </div>

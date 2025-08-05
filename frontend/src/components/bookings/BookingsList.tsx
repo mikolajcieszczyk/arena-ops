@@ -1,31 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookingResponseDto } from "@/lib/api";
 import { BookingCalendar } from "./BookingCalendar";
-
-const mockBookings: BookingResponseDto[] = Array.from({ length: 10 }).map(
-  (_, i) => ({
-    id: i + 1,
-    clientId: 100 + i,
-    courtId: (i % 3) + 1,
-    startTime: new Date(Date.now() + i * 3600 * 1000 * 24).toISOString(),
-    endTime: new Date(
-      Date.now() + i * 3600 * 1000 * 24 + 2 * 3600 * 1000
-    ).toISOString(),
-    status: ["pending", "confirmed", "cancelled", "completed", "no_show"][
-      i % 5
-    ] as BookingResponseDto["status"],
-    totalPrice: 100 + i * 10,
-    notes: i % 2 === 0 ? `Notatka do rezerwacji #${i + 1}` : undefined,
-    specialRequests: i % 3 === 0 ? "Potrzebne dodatkowe piłki" : undefined,
-    createdAt: new Date(Date.now() - 1000000).toISOString(),
-    updatedAt: new Date(Date.now() - 500000).toISOString(),
-  })
-);
+import { useBookingsApi } from "@/hooks/use-api";
+import "@/lib/api-client";
 
 export function BookingsList() {
-  const [bookings] = useState<BookingResponseDto[]>(mockBookings);
+  const [bookings, setBookings] = useState<BookingResponseDto[]>([]);
+  const { getBookings, isLoading, error } = useBookingsApi();
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const result = await getBookings();
+        console.log("Pobrane rezerwacje z API:", result);
+        setBookings(Array.isArray(result) ? result : []);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
+        setBookings([]);
+      }
+    };
+
+    fetchBookings();
+  }, [getBookings]);
+
+  if (isLoading && bookings.length === 0) {
+    return <div className="p-4 text-center">Ładowanie rezerwacji...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 text-center text-red-600">
+        Błąd podczas ładowania rezerwacji: {error}
+      </div>
+    );
+  }
 
   return <BookingCalendar bookings={bookings} />;
 }
