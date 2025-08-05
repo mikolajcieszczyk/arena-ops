@@ -45,21 +45,25 @@ services:
       - ./api:/app
       - /app/node_modules
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: arena-ops-frontend
-  #   ports:
-  #     - "3001:3001"
-  #   environment:
-  #     NODE_ENV: development
-  #   networks:
-  #     - arena-ops-network
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./frontend:/app
-  #     - /app/node_modules
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: arena-ops-frontend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+    networks:
+      - arena-ops-network
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
 
 volumes:
   arena-ops-data:

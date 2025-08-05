@@ -36,8 +36,9 @@ arena-ops/
    ```
 
 3. **Access the application**
+   - Frontend: http://localhost:3001
    - API: http://localhost:3000
-   - Database: localhost:5432
+   - Database: localhost:5434
 
 ### Development
 
@@ -57,11 +58,16 @@ yarn start:dev
 
 #### Frontend
 
-Frontend will be added here in the future.
+The frontend is written in Next.js with TypeScript, using Tailwind CSS and Shadcn UI components.
 
 ```bash
+# Using Docker Compose (recommended)
+docker-compose up frontend
+
+# Or locally
 cd frontend
-# Instructions will be added after creating the frontend
+yarn install
+yarn dev --port 3001
 ```
 
 ### Database
@@ -86,10 +92,12 @@ docker-compose up -d
 docker-compose down
 
 # View logs
-docker-compose logs -f api
+docker-compose logs -f api      # Backend logs
+docker-compose logs -f frontend # Frontend logs
 
 # Restart specific service
-docker-compose restart api
+docker-compose restart api      # Restart backend
+docker-compose restart frontend # Restart frontend
 
 # Remove all data (including database)
 docker-compose down -v

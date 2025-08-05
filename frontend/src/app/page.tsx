@@ -11,6 +11,7 @@ import {
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import { useI18n } from "@/i18n/I18nProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import Link from "next/link";
 
 export default function Home() {
   const { t } = useI18n();
@@ -113,9 +114,11 @@ export default function Home() {
               <Button className="w-full" size="lg">
                 {t("actions.bookings.new")}
               </Button>
-              <Button variant="outline" className="w-full">
-                {t("actions.bookings.browse")}
-              </Button>
+              <Link href="/bookings">
+                <Button asChild variant="outline" className="w-full">
+                  <span>{t("actions.bookings.browse")}</span>
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 
