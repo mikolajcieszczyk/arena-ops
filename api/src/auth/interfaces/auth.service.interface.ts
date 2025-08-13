@@ -4,7 +4,7 @@ import { LoginDto } from '../dto/login.dto';
 import { PasswordResetRequestResponse } from '../types/password-reset.types';
 
 export interface IAuthService {
-  register(registerDto: RegisterDto): Promise<{ accessToken: string }>;
+  register(registerDto: RegisterDto): Promise<void>;
   validateUser(
     email: string,
     password: string,

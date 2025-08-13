@@ -26,7 +26,7 @@ export class AuthService implements IAuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(registerDto: RegisterDto): Promise<{ accessToken: string }> {
+  async register(registerDto: RegisterDto): Promise<void> {
     const { email, password, firstName, lastName, role } = registerDto;
 
     // Check if user exists
@@ -54,12 +54,6 @@ export class AuthService implements IAuthService {
 
       // Save user
       await this.userRepository.save(user);
-
-      // Generate JWT token
-      const payload = { sub: user.id, email: user.email, role: user.role };
-      const accessToken = await this.jwtService.signAsync(payload);
-
-      return { accessToken };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       throw new InternalServerErrorException('Error during registration');

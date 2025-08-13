@@ -22,14 +22,6 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'User successfully registered',
-    schema: {
-      properties: {
-        accessToken: {
-          type: 'string',
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-        },
-      },
-    },
   })
   @ApiResponse({ status: 409, description: 'User already exists' })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
