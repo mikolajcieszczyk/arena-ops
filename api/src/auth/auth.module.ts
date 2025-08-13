@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { RoleValidationMiddleware } from './middleware/role-validation.middleware';
 import jwtConfig from '../config/jwt.config';
 
 @Module({
@@ -28,7 +29,16 @@ import jwtConfig from '../config/jwt.config';
     TypeOrmModule.forFeature([User, PasswordResetToken]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, LocalStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    LocalStrategy,
+    RoleValidationMiddleware,
+  ],
   exports: [AuthService, PassportModule, JwtModule],
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RoleValidationMiddleware).forRoutes('*');
+  }
+}

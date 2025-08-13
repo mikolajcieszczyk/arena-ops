@@ -1,9 +1,21 @@
-import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+import { applyDecorators, UseGuards } from '@nestjs/common';
+import { UserRole } from '../../users/enums/user-role.enum';
+import { Permission } from '../types/permission.type';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { Roles } from './roles.decorator';
+import { RequirePermissions } from './permissions.decorator';
+import { RoleGuard } from '../guards/role.guard';
 
-export const ROLES_KEY = 'roles';
-export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);
+export function Auth(roles?: UserRole[], permissions?: Permission[]) {
+  const decorators = [UseGuards(JwtAuthGuard, RoleGuard)];
 
-export function Auth(...roles: string[]) {
-  return applyDecorators(UseGuards(JwtAuthGuard), Roles(...roles));
+  if (roles) {
+    decorators.push(Roles(...roles));
+  }
+
+  if (permissions) {
+    decorators.push(RequirePermissions(...permissions));
+  }
+
+  return applyDecorators(...decorators);
 }
