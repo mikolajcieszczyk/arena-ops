@@ -4,16 +4,17 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-COPY yarn.lock ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN npm install --legacy-peer-deps && \
+    npm cache clean --force && \
+    chown -R node:node /app/node_modules
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN yarn build
+RUN npm run build
 
 # Expose port
 EXPOSE 3000
