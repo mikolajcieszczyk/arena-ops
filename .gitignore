@@ -118,6 +118,9 @@ public
 # Cursor rules
 .cursor/
 
+# Project documentation
+docs/
+
 # OS generated files
 .DS_Store
 .DS_Store?
