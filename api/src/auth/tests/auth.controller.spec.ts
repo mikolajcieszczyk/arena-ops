@@ -1,16 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
-import { UserRole } from '../dto/register.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { UserRole } from '../../users/enums/user-role.enum';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let mockAuthService;
+  let mockAuthService: jest.Mocked<AuthService>;
 
   beforeEach(async () => {
     mockAuthService = {
-      register: jest.fn(),
-    };
+      register: jest.fn().mockResolvedValue({ accessToken: 'mockToken' }),
+      userRepository: {},
+      jwtService: {},
+    } as unknown as jest.Mocked<AuthService>;
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
@@ -26,7 +29,7 @@ describe('AuthController', () => {
   });
 
   describe('register', () => {
-    const registerDto = {
+    const registerDto: RegisterDto = {
       email: 'test@example.com',
       password: 'TestPassword123!',
       firstName: 'John',
@@ -36,11 +39,11 @@ describe('AuthController', () => {
 
     it('should call authService.register with correct parameters', async () => {
       const mockToken = { accessToken: 'mockToken' };
-      mockAuthService.register.mockResolvedValue(mockToken);
 
       const result = await controller.register(registerDto);
 
-      expect(mockAuthService.register).toHaveBeenCalledWith(registerDto);
+      const registerCall = mockAuthService.register.mock.calls[0][0];
+      expect(registerCall).toEqual(registerDto);
       expect(result).toEqual(mockToken);
     });
   });
