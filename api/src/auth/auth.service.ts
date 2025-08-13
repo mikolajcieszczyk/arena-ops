@@ -2,12 +2,14 @@ import {
   Injectable,
   ConflictException,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -55,6 +57,42 @@ export class AuthService {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       throw new InternalServerErrorException('Error during registration');
+    }
+  }
+
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Omit<User, 'password'> | null> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
+    const user = await this.validateUser(loginDto.email, loginDto.password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    try {
+      // Update last login timestamp
+      await this.userRepository.update(user.id, {
+        lastLoginAt: new Date(),
+      });
+
+      const payload = { sub: user.id, email: user.email, role: user.role };
+      const accessToken = await this.jwtService.signAsync(payload);
+
+      return { accessToken };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
+      throw new InternalServerErrorException('Error during login');
     }
   }
 }
