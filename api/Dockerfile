@@ -18,5 +18,8 @@ RUN yarn build
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["yarn", "start:dev"]
+# Make start script executable
+RUN chmod +x scripts/start-with-migrations.sh
+
+# Start the application with migrations
+CMD ["sh", "scripts/start-with-migrations.sh"]
