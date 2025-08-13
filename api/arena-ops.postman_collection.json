@@ -1,22 +1,16 @@
 {
   "info": {
     "name": "Arena Ops API",
-    "description": "API dla systemu zarządzania klubem tenisowym",
+    "description": "API for tennis court booking system",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:3000",
-      "type": "string"
-    }
-  ],
   "item": [
     {
-      "name": "Clients",
+      "name": "Auth",
+      "description": "Authentication endpoints",
       "item": [
         {
-          "name": "Create Client",
+          "name": "Register",
           "request": {
             "method": "POST",
             "header": [
@@ -25,241 +19,291 @@
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Jan\",\n  \"lastName\": \"Kowalski\",\n  \"email\": \"jan.kowalski@example.com\",\n  \"phoneNumber\": \"+48 123 456 789\",\n  \"city\": \"Warszawa\",\n  \"membershipType\": \"premium\",\n  \"skillLevel\": \"3.5\",\n  \"acceptsMarketing\": true\n}"
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+48123456789\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/clients",
-              "host": ["{{baseUrl}}"],
-              "path": ["clients"]
-            }
+            "description": "Register a new user"
           }
         },
         {
-          "name": "Get All Clients",
+          "name": "Login",
           "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/clients",
-              "host": ["{{baseUrl}}"],
-              "path": ["clients"]
-            }
-          }
-        },
-        {
-          "name": "Get Client by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/clients/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["clients", "1"]
-            }
-          }
-        },
-        {
-          "name": "Update Client",
-          "request": {
-            "method": "PATCH",
+            "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"firstName\": \"Janusz\",\n  \"city\": \"Kraków\",\n  \"skillLevel\": \"4.0\"\n}"
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/clients/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["clients", "1"]
-            }
-          }
-        },
-        {
-          "name": "Delete Client",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/clients/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["clients", "1"]
-            }
+            "description": "Login user and get JWT token"
           }
         }
       ]
     },
     {
       "name": "Courts",
+      "description": "Tennis courts management",
       "item": [
-        {
-          "name": "Create Court",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Kort Centralny\",\n  \"description\": \"Główny kort tenisowy\",\n  \"surface\": \"clay\",\n  \"type\": \"outdoor\",\n  \"courtNumber\": 1,\n  \"hourlyRate\": 50.00,\n  \"location\": \"Główny kompleks\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/courts",
-              "host": ["{{baseUrl}}"],
-              "path": ["courts"]
-            }
-          }
-        },
         {
           "name": "Get All Courts",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/courts",
               "host": ["{{baseUrl}}"],
               "path": ["courts"]
-            }
+            },
+            "description": "Get list of all courts"
           }
         },
         {
           "name": "Get Court by ID",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/courts/1",
+              "raw": "{{baseUrl}}/courts/:id",
               "host": ["{{baseUrl}}"],
-              "path": ["courts", "1"]
-            }
+              "path": ["courts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get court details by ID"
           }
         },
         {
-          "name": "Update Court",
+          "name": "Create Court",
           "request": {
-            "method": "PATCH",
+            "method": "POST",
             "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{baseUrl}}/courts",
+              "host": ["{{baseUrl}}"],
+              "path": ["courts"]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"hourlyRate\": 60.00,\n  \"isAvailable\": false,\n  \"notes\": \"Kort w remoncie\"\n}"
+              "raw": "{\n  \"name\": \"Court 1\",\n  \"type\": \"indoor\",\n  \"status\": \"active\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/courts/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["courts", "1"]
-            }
-          }
-        },
-        {
-          "name": "Delete Court",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/courts/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["courts", "1"]
-            }
+            "description": "Create a new court"
           }
         }
       ]
     },
     {
       "name": "Bookings",
+      "description": "Court booking management",
       "item": [
-        {
-          "name": "Create Booking",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"clientId\": 1,\n  \"courtId\": 1,\n  \"startTime\": \"2024-06-28T10:00:00Z\",\n  \"endTime\": \"2024-06-28T12:00:00Z\",\n  \"status\": \"confirmed\",\n  \"totalPrice\": 100.00,\n  \"notes\": \"Rezerwacja na trening\",\n  \"specialRequests\": \"Potrzebuję piłki\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/bookings",
-              "host": ["{{baseUrl}}"],
-              "path": ["bookings"]
-            }
-          }
-        },
         {
           "name": "Get All Bookings",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/bookings",
               "host": ["{{baseUrl}}"],
               "path": ["bookings"]
-            }
+            },
+            "description": "Get list of all bookings"
           }
         },
         {
           "name": "Get Booking by ID",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/bookings/1",
+              "raw": "{{baseUrl}}/bookings/:id",
               "host": ["{{baseUrl}}"],
-              "path": ["bookings", "1"]
-            }
+              "path": ["bookings", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get booking details by ID"
           }
         },
         {
-          "name": "Update Booking",
+          "name": "Create Booking",
           "request": {
-            "method": "PATCH",
+            "method": "POST",
             "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
               {
                 "key": "Content-Type",
                 "value": "application/json"
               }
             ],
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings"]
+            },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"completed\",\n  \"notes\": \"Trening zakończony pomyślnie\"\n}"
+              "raw": "{\n  \"courtId\": 1,\n  \"startTime\": \"2024-03-20T10:00:00Z\",\n  \"endTime\": \"2024-03-20T11:00:00Z\"\n}"
             },
-            "url": {
-              "raw": "{{baseUrl}}/bookings/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["bookings", "1"]
-            }
-          }
-        },
-        {
-          "name": "Delete Booking",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/bookings/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["bookings", "1"]
-            }
+            "description": "Create a new booking"
           }
         }
       ]
+    },
+    {
+      "name": "Clients",
+      "description": "Client management",
+      "item": [
+        {
+          "name": "Get All Clients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients"]
+            },
+            "description": "Get list of all clients"
+          }
+        },
+        {
+          "name": "Get Client by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clients/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get client details by ID"
+          }
+        },
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/clients",
+              "host": ["{{baseUrl}}"],
+              "path": ["clients"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+48123456789\"\n}"
+            },
+            "description": "Create a new client"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
     }
   ]
 }
